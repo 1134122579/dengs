@@ -95,7 +95,7 @@
             <span>{{ row.count_date }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="今日数量" align="center">
+        <!-- <el-table-column label="今日数量" align="center">
           <template slot-scope="{ row }">
             <span>{{ row.count_mon }}</span>
           </template>
@@ -104,7 +104,7 @@
           <template slot-scope="{ row }">
             <span>{{ row.count_year }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="团队数量" align="center">
           <template slot-scope="{ row }">
             <span>{{ row.team_num }}</span>
@@ -120,6 +120,7 @@
           :label="item"
           :key="index"
           rukou
+          sortable
           :prop="item"
           align="center"
         >
@@ -195,7 +196,11 @@ export default {
             label: {
               show: true
             },
-            data: [120, 200, 150],
+            data: [
+              this.renshuobj.allDsCount,
+              this.renshuobj.teamCount,
+              this.renshuobj.unit_count
+            ],
             type: "bar",
             color: "#3A7BD7"
           }
