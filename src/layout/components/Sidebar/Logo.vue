@@ -37,9 +37,9 @@ export default {
   },
   data() {
     return {
-      title: "行山易数据后台管理系统",
+      title: "南澳登山数据管理系统",
       logo:
-        "https://wx.qlogo.cn/mmhead/Q3auHgzwzM6snfWGjvicr9SIthIFgpNFAC12iclOR8KJUia6uOb2IJiaUA/0"
+        "https://wx.qlogo.cn/mmhead/Q3auHgzwzM5F8tUfTagxfbeIdZEK3knzheQKHHfqkWlHSBYtCdicoYA/0"
     };
   }
 };

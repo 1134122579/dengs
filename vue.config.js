@@ -24,7 +24,7 @@ module.exports = {
    * In most cases please use '/' !!!
    * Detail: https://cli.vuejs.org/config/#publicpath
    */
-  publicPath: "/xsyadmin",
+  // publicPath: "/xsyadmin",
   // publicPath: "/",
   outputDir: "dist",
   assetsDir: "static",
@@ -39,7 +39,7 @@ module.exports = {
     },
     proxy: {
       [process.env.VUE_APP_BASE_API]: {
-        target: "https://catshop.nxcsoft.top/admin",
+        target: "https://api.uba9.com/admin",
         changeOrigin: true,
         pathRewrite: {
           ["^" + process.env.VUE_APP_BASE_API]: ""

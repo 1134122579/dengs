@@ -7,7 +7,7 @@
  * @FilePath: \navadmin\src\settings.js
  */
 module.exports = {
-    title: '行山易数据后台管理系统',
+    title: '南澳登山数据管理系统',
 
     /**
      * @type {boolean} true | false

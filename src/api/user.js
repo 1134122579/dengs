@@ -27,9 +27,9 @@ export function userList(data) {
     })
 }
 // 修改用户状态
-export function setUserStatus(data) {
+export function setUser(data) {
     return request({
-        url: 'setUserStatus',
+        url: 'setUser',
         method: 'post',
         data
     })

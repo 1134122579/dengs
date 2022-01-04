@@ -5,9 +5,7 @@
         <div class="top">
           <div class="top_l">
             <div class="block Left">
-              <div class="block_l">
-                今日
-              </div>
+              <div class="block_l">今日</div>
               <div class="block_r">
                 <p>登山人数</p>
                 <count-to
@@ -28,10 +26,8 @@
               />
             </div>
             <div class="block Left">
-              <div class="block_l" style="background:#42B983;">
-                昨日
-              </div>
-              <div class="block_r ">
+              <div class="block_l" style="background: #42b983">昨日</div>
+              <div class="block_r">
                 <p>登山人数</p>
                 <count-to
                   :start-val="stateValue"
@@ -95,16 +91,12 @@
             <span>{{ row.count_date }}</span>
           </template>
         </el-table-column>
-        <!-- <el-table-column label="今日数量" align="center">
+        
+        <el-table-column label="总人数" align="center">
           <template slot-scope="{ row }">
-            <span>{{ row.count_mon }}</span>
+            <span>{{ row.team_num+ row.unit_num}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="昨日数量" align="center">
-          <template slot-scope="{ row }">
-            <span>{{ row.count_year }}</span>
-          </template>
-        </el-table-column> -->
         <el-table-column label="团队数量" align="center">
           <template slot-scope="{ row }">
             <span>{{ row.team_num }}</span>
@@ -120,7 +112,6 @@
           :label="item"
           :key="index"
           rukou
-          sortable
           :prop="item"
           align="center"
         >
@@ -142,20 +133,21 @@ export default {
       DayDsCount: [],
       rukoullist: [],
       rukoucountlist: [],
-      rukounamelist: []
+      rukounamelist: [],
     };
   },
   components: {
-    countTo
+    countTo,
   },
   mounted() {
-    getTodayDsCount().then(res => {
+    getTodayDsCount().then((res) => {
       console.log(res);
       let renshuobj = res.data.renshu;
       let rukoullist = res.data.rukou;
       let rukounamelist = [];
       let rukoucountlist = [];
-      rukoullist.forEach(item => {
+      rukoullist.forEach((item) => {
+        // item.rukou.rukou=item.rukou.rukou.slice(0,3)+'...'
         rukounamelist.push(item.rukou);
         rukoucountlist.push(item.count);
       });
@@ -167,10 +159,10 @@ export default {
       this.createdrukou();
       this.createdJC();
     });
-    getDayDsCount().then(res => {
-      this.DayDsCount = res.data.map(item => {
+    getDayDsCount().then((res) => {
+      this.DayDsCount = res.data.map((item) => {
         let obj = { ...item };
-        item.rukou.forEach(item => {
+        item.rukou.forEach((item) => {
           obj[item.rukou] = item.count;
         });
         return obj;
@@ -186,25 +178,26 @@ export default {
       option = {
         xAxis: {
           type: "category",
-          data: ["登山人数", "团体", "个人"]
+          data: ["登山人数", "团体", "个人"],
+          
         },
         yAxis: {
-          type: "value"
+          type: "value",
         },
         series: [
           {
             label: {
-              show: true
+              show: true,
             },
             data: [
               this.renshuobj.allDsCount,
               this.renshuobj.teamCount,
-              this.renshuobj.unit_count
+              this.renshuobj.unit_count,
             ],
             type: "bar",
-            color: "#3A7BD7"
-          }
-        ]
+            color: "#3A7BD7",
+          },
+        ],
       };
 
       option && myChart.setOption(option);
@@ -217,28 +210,40 @@ export default {
         xAxis: {
           type: "category",
           data: this.rukounamelist,
+           axisLabel:{
+            rotate:25,
+            color:'#42b983',
+            formatter:function(val){
+              if(val.length>3){
+                return `${val.slice(0,5)}...`
+              }
+              return val;
+            }
+          },
           axisTick: {
-            alignWithLabel: true
-          }
+            alignWithLabel: true,
+          },
         },
         yAxis: {
-          type: "value"
+          type: "value",
         },
         series: [
           {
             label: {
-              show: true
+              show: true,
             },
+             barMaxWidth:50,
+             barMinHeight:20,
             data: this.rukoucountlist,
             type: "bar",
-            color: "#3A7BD7"
-          }
-        ]
+            color: "#3A7BD7",
+          },
+        ],
       };
 
       option && myChart.setOption(option);
-    }
-  }
+    },
+  },
 };
 </script>
 

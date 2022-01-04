@@ -151,7 +151,7 @@
       top="5vh"
       width="30%"
     >
-      <el-form :model="form" label-width="100px" ref="formName" :rules="rules">
+      <el-form :model="form" label-width="100px" >
         <el-form-item label="队员姓名:" prop="name" min-width="80">
           <span >{{form.name}}</span>
         </el-form-item>
@@ -181,7 +181,7 @@
   </div>
 </template>
 <script>
-import { userList, setUserStatus } from '@/api/user'
+import { userList, setUser } from '@/api/user'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination

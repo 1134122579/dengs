@@ -9,7 +9,7 @@
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <img src="https://wx.qlogo.cn/mmhead/Q3auHgzwzM6snfWGjvicr9SIthIFgpNFAC12iclOR8KJUia6uOb2IJiaUA/0" class="user-avatar">
+          <img src="https://wx.qlogo.cn/mmhead/Q3auHgzwzM5F8tUfTagxfbeIdZEK3knzheQKHHfqkWlHSBYtCdicoYA/0" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">

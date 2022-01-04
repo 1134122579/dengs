@@ -95,10 +95,10 @@ export default {
       let tuanCountObj = { name: "团队" };
       let tableData = [];
       list.forEach((item, index) => {
-        gerenObj[`T${index}`] = item.team_num_all;
-        tuanCountObj[`T${index}`] = item.unit_num_all;
-        geren.push(item.team_num_all);
-        tuanCount.push(item.unit_num_all);
+        gerenObj[`T${index}`] = item.unit_num_all;
+        tuanCountObj[`T${index}`] = item.team_num_all;
+        geren.push(item.unit_num_all);
+        tuanCount.push(item.team_num_all);
       });
       this.tableData = [gerenObj, tuanCountObj];
       console.log(this.tableData);
