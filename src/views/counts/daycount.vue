@@ -54,15 +54,10 @@
           </div>
         </div>
         <div class="content">
-          <div   style="margin:0 auto;">
-            <el-button
-
-              type="primary"
-              @click="onLookZX"
-              >{{
-                iscreatedJC ? "今日入口数据柱状图" : "小时数据折线图"
-              }}</el-button
-            >
+          <div style="margin:0 auto;">
+            <el-button type="primary" @click="onLookZX">{{
+              iscreatedJC ? "今日入口数据柱状图" : "小时数据折线图"
+            }}</el-button>
           </div>
           <div id="shankou" v-if="iscreatedJC"></div>
           <div id="createdZStyle" v-else></div>
