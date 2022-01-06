@@ -1,7 +1,7 @@
 <template>
   <div class="yearsStyle">
     <el-card>
-      <h4>年度数据</h4>
+      <h4>{{ newYraes }}年度登山数据</h4>
       <div class="list" style="display:flex">
         <div class="count">
           <div id="main"></div>
@@ -43,6 +43,7 @@
         </el-table-column>
         <el-table-column
           v-for="(item, index) in timelist"
+          :key="index"
           :prop="'T' + index"
           sortable
           :label="item"
@@ -57,7 +58,7 @@
 import * as echarts from "echarts";
 import { getYearDsCount } from "@/api/count.js";
 import countTo from "vue-count-to";
-
+import { parseTime } from "@/utils";
 export default {
   data() {
     return {
@@ -81,6 +82,12 @@ export default {
       geren: [220, 182, 191, 234, 290, 330, 310],
       tuanCount: [120, 132, 101, 134, 90, 230, 210]
     };
+  },
+  computed: {
+    newYraes() {
+      let years = new Date();
+      return parseTime(years, "{y}");
+    }
   },
   components: {
     countTo
@@ -200,9 +207,11 @@ export default {
   box-sizing: border-box;
   h4 {
     text-align: center;
-    padding: 30px;
-
+    // padding: 0px;
+    font-weight: bold;
+    font-size: 30px;
     width: 100%;
+    margin: 10px 0;
   }
   .count {
     height: 300px;

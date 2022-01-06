@@ -26,6 +26,15 @@ export function userList(data) {
         data
     })
 }
+// 获取备案信息列表
+export function getBeianList(data) {
+    return request({
+        url: 'getBeianList',
+        method: 'post',
+        data
+    })
+}
+
 // 修改用户状态
 export function setUser(data) {
     return request({

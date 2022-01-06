@@ -17,6 +17,7 @@
               </div>
             </div>
             <div class="block Right">
+              <span class="tag">今日</span>
               <p>个人登山</p>
               <count-to
                 :start-val="stateValue"
@@ -38,6 +39,7 @@
               </div>
             </div>
             <div class="block Right">
+              <span class="tag">今日</span>
               <p>团体登山</p>
               <count-to
                 :start-val="stateValue"
@@ -52,11 +54,22 @@
           </div>
         </div>
         <div class="content">
-          <div id="shankou"></div>
+          <div   style="margin:0 auto;">
+            <el-button
+
+              type="primary"
+              @click="onLookZX"
+              >{{
+                iscreatedJC ? "今日入口数据柱状图" : "小时数据折线图"
+              }}</el-button
+            >
+          </div>
+          <div id="shankou" v-if="iscreatedJC"></div>
+          <div id="createdZStyle" v-else></div>
         </div>
       </el-card>
       <el-card class="right">
-        <h6>今日登山面板数据</h6>
+        <h6>登山人员联系方式统计</h6>
         <div class="right_c">
           <div class="block" v-for="(item, index) in rukoullist" :key="index">
             <p>{{ item.rukou }}</p>
@@ -81,20 +94,15 @@
         highlight-current-row
         style="width: 100%"
       >
-        <el-table-column label="编号" prop="id" align="center" width="80">
-          <template slot-scope="{ row }">
-            <span>{{ row.id }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="日期" align="center">
+        <el-table-column label="日期" align="center" min-width="80">
           <template slot-scope="{ row }">
             <span>{{ row.count_date }}</span>
           </template>
         </el-table-column>
-        
+
         <el-table-column label="总人数" align="center">
           <template slot-scope="{ row }">
-            <span>{{ row.team_num+ row.unit_num}}</span>
+            <span>{{ row.team_num + row.unit_num }}</span>
           </template>
         </el-table-column>
         <el-table-column label="团队数量" align="center">
@@ -114,8 +122,7 @@
           rukou
           :prop="item"
           align="center"
-        >
-        </el-table-column>
+        ></el-table-column>
       </el-table>
     </el-card>
   </div>
@@ -123,10 +130,17 @@
 <script>
 import countTo from "vue-count-to";
 import * as echarts from "echarts";
-import { getTodayDsCount, getDayDsCount } from "@/api/count.js";
+import {
+  getTodayDsCount,
+  getDayDsCount,
+  getDayDsZxCount
+} from "@/api/count.js";
 export default {
   data() {
     return {
+      tableKey: "count",
+      listLoading: false,
+      iscreatedJC: true,
       stateValue: 0,
       daycount: 3000,
       renshuobj: {},
@@ -134,19 +148,21 @@ export default {
       rukoullist: [],
       rukoucountlist: [],
       rukounamelist: [],
+      timelist: [],
+      numList: []
     };
   },
   components: {
-    countTo,
+    countTo
   },
   mounted() {
-    getTodayDsCount().then((res) => {
+    getTodayDsCount().then(res => {
       console.log(res);
       let renshuobj = res.data.renshu;
       let rukoullist = res.data.rukou;
       let rukounamelist = [];
       let rukoucountlist = [];
-      rukoullist.forEach((item) => {
+      rukoullist.forEach(item => {
         // item.rukou.rukou=item.rukou.rukou.slice(0,3)+'...'
         rukounamelist.push(item.rukou);
         rukoucountlist.push(item.count);
@@ -159,18 +175,75 @@ export default {
       this.createdrukou();
       this.createdJC();
     });
-    getDayDsCount().then((res) => {
-      this.DayDsCount = res.data.map((item) => {
+    // 今日数据统计、还差折线图没弄
+    getDayDsCount().then(res => {
+      this.DayDsCount = res.data.map(item => {
         let obj = { ...item };
-        item.rukou.forEach((item) => {
+        item.rukou.forEach(item => {
           obj[item.rukou] = item.count;
         });
         return obj;
       });
       console.log(this.DayDsCount, 12123);
     });
+    getDayDsZxCount().then(res => {
+      console.log(res);
+      let time = [];
+      let numList = [];
+      res.data.forEach(item => {
+        time.push(`${item.hour}时`);
+        numList.push(item.num);
+      });
+      this.timelist = time;
+      this.numList = numList;
+      this.createdZ();
+    });
   },
   methods: {
+    onLookZX() {
+      if (this.iscreatedJC) {
+        this.createdrukou();
+      } else {
+        this.createdZ();
+      }
+      this.iscreatedJC = !this.iscreatedJC;
+    },
+    createdZ() {
+      var chartDom = document.getElementById("createdZStyle");
+      var myChart = echarts.init(chartDom);
+      var option;
+      option = {
+        xAxis: {
+          type: "category",
+          data: this.timelist,
+          axisLabel: {
+            rotate: 0,
+            color: "#42b983",
+            formatter: function(val) {
+              if (val.length > 3) {
+                return `${val.slice(0, 5)}...`;
+              }
+              return val;
+            }
+          }
+        },
+        yAxis: {
+          type: "value"
+        },
+        series: [
+          {
+            label: {
+              show: true
+            },
+            data: this.numList,
+            type: "line",
+            color: "#3A7BD7"
+          }
+        ]
+      };
+
+      option && myChart.setOption(option);
+    },
     createdJC() {
       var chartDom = document.getElementById("createdJC");
       var myChart = echarts.init(chartDom);
@@ -178,26 +251,25 @@ export default {
       option = {
         xAxis: {
           type: "category",
-          data: ["登山人数", "团体", "个人"],
-          
+          data: ["登山人数", "团体", "个人"]
         },
         yAxis: {
-          type: "value",
+          type: "value"
         },
         series: [
           {
             label: {
-              show: true,
+              show: true
             },
             data: [
               this.renshuobj.allDsCount,
               this.renshuobj.teamCount,
-              this.renshuobj.unit_count,
+              this.renshuobj.unit_count
             ],
             type: "bar",
-            color: "#3A7BD7",
-          },
-        ],
+            color: "#3A7BD7"
+          }
+        ]
       };
 
       option && myChart.setOption(option);
@@ -210,40 +282,40 @@ export default {
         xAxis: {
           type: "category",
           data: this.rukounamelist,
-           axisLabel:{
-            rotate:25,
-            color:'#42b983',
-            formatter:function(val){
-              if(val.length>3){
-                return `${val.slice(0,5)}...`
+          axisLabel: {
+            rotate: 25,
+            color: "#42b983",
+            formatter: function(val) {
+              if (val.length > 3) {
+                return `${val.slice(0, 5)}...`;
               }
               return val;
             }
           },
           axisTick: {
-            alignWithLabel: true,
-          },
+            alignWithLabel: true
+          }
         },
         yAxis: {
-          type: "value",
+          type: "value"
         },
         series: [
           {
             label: {
-              show: true,
+              show: true
             },
-             barMaxWidth:50,
-             barMinHeight:20,
+            barMaxWidth: 50,
+            barMinHeight: 20,
             data: this.rukoucountlist,
             type: "bar",
-            color: "#3A7BD7",
-          },
-        ],
+            color: "#3A7BD7"
+          }
+        ]
       };
 
       option && myChart.setOption(option);
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -286,6 +358,16 @@ export default {
           justify-content: center;
           align-items: center;
           flex-direction: column;
+          position: relative;
+          .tag {
+            position: absolute;
+            top: 0;
+            right: 0;
+            font-size: 16px;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 0 10px 0 10px;
+          }
         }
         .block {
           width: 48%;
@@ -304,6 +386,10 @@ export default {
       .top_r {
         width: 50%;
         flex: 1;
+        .LB {
+          width: 100%;
+          height: 100%;
+        }
         #createdJC {
           height: 100%;
         }
@@ -315,6 +401,10 @@ export default {
         width: 100%;
         height: 100%;
       }
+      #createdZStyle {
+        width: 100%;
+        height: 100%;
+      }
     }
   }
   .right {
@@ -323,6 +413,8 @@ export default {
     h6 {
       font-size: 20px;
       line-height: 1;
+      margin: 0;
+      padding: 10px 0;
     }
     .right_c {
       display: flex;
@@ -336,8 +428,17 @@ export default {
         margin-top: 10px;
         margin-left: 10px;
         text-align: center;
-        padding: 0 20px;
+        padding: 0 10px;
         box-shadow: 0 0 5px #ccc;
+        border-radius: 5px;
+        p {
+          font-size: 16px;
+
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          overflow: hidden;
+        }
         .count-to {
           font-weight: 600;
           font-size: 20px;
