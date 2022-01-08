@@ -81,15 +81,11 @@
         </el-button> -->
       </div>
     </el-form>
-
-    <el-dialog title="Or connect with" :visible.sync="showDialog">
-      Can not be simulated on local, so please combine you own business
-      simulation! ! !
-      <br />
-      <br />
-      <br />
-      <social-sign />
-    </el-dialog>
+    <p
+      style="position: fixed;bottom: 0;width:100%;text-align:center;color:#FFF;"
+    >
+      Copyright © 2021-2022 应安科技 版权所有
+    </p>
   </div>
 </template>
 

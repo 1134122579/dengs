@@ -54,13 +54,19 @@
           </div>
         </div>
         <div class="content">
-          <div style="margin:0 auto;">
+          <div class="button_zxt">
             <el-button type="primary" @click="onLookZX">{{
-              iscreatedJC ? "今日入口数据柱状图" : "小时数据折线图"
+              iscreatedJC ? "今日入口数据柱状图" : "今日小时数据折线图"
             }}</el-button>
           </div>
-          <div id="shankou" v-if="iscreatedJC"></div>
-          <div id="createdZStyle" v-else></div>
+          <div class="tuStyle" :hidden="iscreatedJC">
+            <div id="shankou"></div>
+          </div>
+          <div class="tuStyle" :hidden="!iscreatedJC">
+            <div id="createdZStyle"></div>
+          </div>
+          <!-- <div id="shankou" v-if="iscreatedJC"></div>
+          <div id="createdZStyle" v-if="!iscreatedJC"></div> -->
         </div>
       </el-card>
       <el-card class="right">
@@ -151,6 +157,7 @@ export default {
     countTo
   },
   mounted() {
+    // this.getTodayDsCount();
     getTodayDsCount().then(res => {
       console.log(res);
       let renshuobj = res.data.renshu;
@@ -167,9 +174,11 @@ export default {
       this.rukounamelist = rukounamelist;
       this.rukoucountlist = rukoucountlist;
       this.renshuobj = renshuobj;
-      this.createdrukou();
       this.createdJC();
+      // this.createdrukou();
     });
+    this.getDayDsZxCount();
+
     // 今日数据统计、还差折线图没弄
     getDayDsCount().then(res => {
       this.DayDsCount = res.data.map(item => {
@@ -181,25 +190,50 @@ export default {
       });
       console.log(this.DayDsCount, 12123);
     });
-    getDayDsZxCount().then(res => {
-      console.log(res);
-      let time = [];
-      let numList = [];
-      res.data.forEach(item => {
-        time.push(`${item.hour}时`);
-        numList.push(item.num);
-      });
-      this.timelist = time;
-      this.numList = numList;
-      this.createdZ();
-    });
   },
   methods: {
+    getTodayDsCount() {
+      getTodayDsCount().then(res => {
+        console.log(res);
+        let renshuobj = res.data.renshu;
+        let rukoullist = res.data.rukou;
+        let rukounamelist = [];
+        let rukoucountlist = [];
+        rukoullist.forEach(item => {
+          // item.rukou.rukou=item.rukou.rukou.slice(0,3)+'...'
+          rukounamelist.push(item.rukou);
+          rukoucountlist.push(item.count);
+        });
+        console.log(rukounamelist);
+        this.rukoullist = rukoullist;
+        this.rukounamelist = rukounamelist;
+        this.rukoucountlist = rukoucountlist;
+        this.renshuobj = renshuobj;
+        this.createdJC();
+        this.createdrukou();
+      });
+    },
+    getDayDsZxCount() {
+      getDayDsZxCount().then(res => {
+        console.log(res);
+        let time = [];
+        let numList = [];
+        res.data.forEach(item => {
+          time.push(`${item.hour}时`);
+          numList.push(item.num);
+        });
+        this.timelist = time;
+        this.numList = numList;
+        this.createdZ();
+      });
+    },
     onLookZX() {
       if (this.iscreatedJC) {
-        this.createdrukou();
+        // this.createdrukou();
+        this.getTodayDsCount();
       } else {
-        this.createdZ();
+        this.getDayDsZxCount();
+        // this.createdZ();
       }
       this.iscreatedJC = !this.iscreatedJC;
     },
@@ -230,6 +264,7 @@ export default {
             label: {
               show: true
             },
+            smooth: true,
             data: this.numList,
             type: "line",
             color: "#3A7BD7"
@@ -392,13 +427,44 @@ export default {
     }
     .content {
       height: 300px;
-      #shankou {
+      box-sizing: border-box;
+      padding-top: 10px;
+      .button_zxt {
         width: 100%;
-        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
-      #createdZStyle {
+      .tuStyle {
         width: 100%;
-        height: 100%;
+        height: 260px;
+        position: relative;
+        #shankou {
+          position: absolute;
+          top: 0;
+          right: 0;
+          left: 0;
+          bottom: 0;
+          width: 100%;
+          height: 100%;
+          // width: 100%;
+          // height: 100%;
+          // width: 100%;
+          // min-width: 60vw;
+          height: 260px;
+        }
+        #createdZStyle {
+          position: absolute;
+          top: 0;
+          right: 0;
+          left: 0;
+          bottom: 0;
+          width: 100%;
+          height: 100%;
+          // width: 100%;
+          // min-width: 60vw;
+          // height: 260px;
+        }
       }
     }
   }

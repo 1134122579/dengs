@@ -37,179 +37,177 @@ import Layout from "@/layout";
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
-export const constantRoutes = [{
-        path: "/redirect",
-        component: Layout,
-        hidden: true,
-        children: [{
-            path: "/redirect/:path(.*)",
-            component: () =>
-                import ("@/views/redirect/index")
-        }]
-    },
+export const constantRoutes = [
+  {
+    path: "/redirect",
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: "/redirect/:path(.*)",
+        component: () => import("@/views/redirect/index")
+      }
+    ]
+  },
 
-    {
-        path: "/login",
-        component: () =>
-            import ("@/views/login/index"),
-        hidden: true
-    },
-    {
-        path: "/auth-redirect",
-        component: () =>
-            import ("@/views/login/auth-redirect"),
-        hidden: true
-    },
-    {
-        path: "/",
-        component: Layout,
-        redirect: "/dashboard",
-        children: [{
-            path: "dashboard",
-            component: () =>
-                import ("@/views/counts/daycount"),
-            name: "Dashboard",
-            meta: {
-                title: "今日统计",
-                icon: "dashboard",
-                affix: true
-            }
-        }]
-    },
-    {
-        path: "/count",
-        component: Layout,
-        redirect: "/yearscount",
-        name: "userdata",
+  {
+    path: "/login",
+    component: () => import("@/views/login/index"),
+    hidden: true
+  },
+  {
+    path: "/auth-redirect",
+    component: () => import("@/views/login/auth-redirect"),
+    hidden: true
+  },
+  {
+    path: "/",
+    component: Layout,
+    redirect: "/dashboard",
+    children: [
+      {
+        path: "dashboard",
+        component: () => import("@/views/counts/daycount"),
+        name: "Dashboard",
         meta: {
-            title: "数据统计",
-            icon: "el-icon-s-data"
-        },
-        children: [{
-                path: "yearscount",
-                component: () =>
-                    import ("@/views/counts/years"),
-                name: "yearscount",
-                meta: {
-                    title: "年度数据",
-                    icon: "el-icon-s-data"
-                }
-            },
-            // {
-            //     path: "daycount",
-            //     component: () =>
-            //         import ("@/views/counts/daycount"),
-            //     name: "daycount",
-            //     meta: {
-            //         title: "今日数据",
-            //         icon: "el-icon-pie-chart"
-            //     }
-            // }
-        ]
+          title: "今日统计",
+          icon: "dashboard",
+          affix: true
+        }
+      }
+    ]
+  },
+  {
+    path: "/count",
+    component: Layout,
+    redirect: "/yearscount",
+    name: "userdata",
+    meta: {
+      title: "数据统计",
+      icon: "el-icon-s-data"
     },
-    {
-        path: "/user",
-        component: Layout,
-        redirect: "/userlist",
-        name: "user",
+    children: [
+      {
+        path: "yearscount",
+        component: () => import("@/views/counts/years"),
+        name: "yearscount",
         meta: {
-            title: "登山管理",
-            icon: "set"
-        },
-        children: [{
-                path: "userlist",
-                component: () =>
-                    import ("@/views/user/list"),
-                name: "dengshan",
-                meta: {
-                    title: "登山用户",
-                    icon: "user",
-                    affix: true
-                }
-            },
-            {
-                path: "beianlist",
-                component: () =>
-                    import ("@/views/user/beian"),
-                name: "beian",
-                meta: {
-                    title: "登山备案",
-                    icon: "list",
-                    affix: true
-                }
-            }
-        ]
+          title: "年度数据",
+          icon: "el-icon-s-data"
+        }
+      }
+      // {
+      //     path: "daycount",
+      //     component: () =>
+      //         import ("@/views/counts/daycount"),
+      //     name: "daycount",
+      //     meta: {
+      //         title: "今日数据",
+      //         icon: "el-icon-pie-chart"
+      //     }
+      // }
+    ]
+  },
+  {
+    path: "/user",
+    component: Layout,
+    redirect: "/userlist",
+    name: "user",
+    meta: {
+      title: "登山管理",
+      icon: "set"
     },
+    children: [
+      {
+        path: "userlist",
+        component: () => import("@/views/user/list"),
+        name: "dengshan",
+        meta: {
+          title: "登山用户",
+          icon: "user",
+          affix: true
+        }
+      },
+      {
+        path: "beianlist",
+        component: () => import("@/views/user/beian"),
+        name: "beian",
+        meta: {
+          title: "登山备案",
+          icon: "list",
+          affix: true
+        }
+      }
+    ]
+  },
 
-
-    {
-        path: "/seting",
-        component: Layout,
-        redirect: "/seting",
-        name: "set",
-        meta: {
-            title: "系统设置",
-            icon: "set"
-        },
-        children: [
-            // {
-            //       path: "create",
-            //       component: () =>
-            //           import ("@/views/sysseting/add"),
-            //       name: "createUser",
-            //       meta: {
-            //           title: "添加管理员",
-            //           icon: "add"
-            //       }
-            //   },
-            {
-                path: "edit",
-                component: () =>
-                    import ("@/views/sysseting/edit"),
-                name: "Edit",
-                meta: {
-                    title: "修改密码",
-                    icon: "edit"
-                }
-            }
-        ]
+  {
+    path: "/seting",
+    component: Layout,
+    redirect: "/seting",
+    name: "set",
+    meta: {
+      title: "系统设置",
+      icon: "set"
     },
-    {
-        path: "*",
-        redirect: "/",
-        hidden: true
-    }
+    children: [
+      // {
+      //       path: "create",
+      //       component: () =>
+      //           import ("@/views/sysseting/add"),
+      //       name: "createUser",
+      //       meta: {
+      //           title: "添加管理员",
+      //           icon: "add"
+      //       }
+      //   },
+      {
+        path: "edit",
+        component: () => import("@/views/sysseting/edit"),
+        name: "Edit",
+        meta: {
+          title: "修改密码",
+          icon: "edit"
+        }
+      }
+    ]
+  },
+  {
+    path: "*",
+    redirect: "/",
+    hidden: true
+  }
 ];
 /**
  * asyncRoutes
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
-    // 404 page must be placed at the end !!!
-    // {
-    //     path: "*",
-    //     redirect: "/404",
-    //     hidden: true
-    // }
+  // 404 page must be placed at the end !!!
+  // {
+  //     path: "*",
+  //     redirect: "/404",
+  //     hidden: true
+  // }
 ];
 
 const createRouter = () =>
-    new Router({
-        // require service support
-        mode: "history",
-        scrollBehavior: () => ({
-            y: 0
-        }),
-        base: "/xsyadmin", // 加上这一行 测试环境不要加
-        routes: constantRoutes
-    });
+  new Router({
+    // require service support
+    mode: "history",
+    scrollBehavior: () => ({
+      y: 0
+    }),
+    base: "/xsyadmin", // 加上这一行 测试环境不要加
+    routes: constantRoutes
+  });
 
 const router = createRouter();
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
-    const newRouter = createRouter();
-    router.matcher = newRouter.matcher; // reset router
+  const newRouter = createRouter();
+  router.matcher = newRouter.matcher; // reset router
 }
 
 export default router;
