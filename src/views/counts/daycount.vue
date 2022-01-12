@@ -8,45 +8,25 @@
               <div class="block_l">今日</div>
               <div class="block_r">
                 <p>登山人数</p>
-                <count-to
-                  :start-val="stateValue"
-                  :end-val="renshuobj.allDsCount"
-                  :duration="4000"
-                  :decimals="0"
-                />
+                <count-to :start-val="stateValue" :end-val="renshuobj.allDsCount" :duration="4000" :decimals="0" />
               </div>
             </div>
             <div class="block Right">
               <span class="tag">今日</span>
               <p>个人登山</p>
-              <count-to
-                :start-val="stateValue"
-                :end-val="renshuobj.unit_count"
-                :duration="4000"
-                :decimals="0"
-              />
+              <count-to :start-val="stateValue" :end-val="renshuobj.unit_count" :duration="4000" :decimals="0" />
             </div>
             <div class="block Left">
               <div class="block_l" style="background: #42b983">昨日</div>
               <div class="block_r">
                 <p>登山人数</p>
-                <count-to
-                  :start-val="stateValue"
-                  :end-val="renshuobj.yesterdayCount"
-                  :duration="4000"
-                  :decimals="0"
-                />
+                <count-to :start-val="stateValue" :end-val="renshuobj.yesterdayCount" :duration="4000" :decimals="0" />
               </div>
             </div>
             <div class="block Right">
               <span class="tag">今日</span>
               <p>团体登山</p>
-              <count-to
-                :start-val="stateValue"
-                :end-val="renshuobj.teamCount"
-                :duration="4000"
-                :decimals="0"
-              />
+              <count-to :start-val="stateValue" :end-val="renshuobj.teamCount" :duration="4000" :decimals="0" />
             </div>
           </div>
           <div class="top_r">
@@ -74,27 +54,21 @@
         <div class="right_c">
           <div class="block" v-for="(item, index) in rukoullist" :key="index">
             <p>{{ item.rukou }}</p>
-            <count-to
-              class="count-to"
-              :start-val="stateValue"
-              :end-val="item.count"
-              :duration="4000"
-              :decimals="0"
-            />
+            <count-to class="count-to" :start-val="stateValue" :end-val="item.count" :duration="4000" :decimals="0" />
           </div>
         </div>
       </el-card>
     </div>
     <el-card style="margin: 20px">
-      <el-table
-        :key="tableKey"
-        v-loading="listLoading"
-        :data="DayDsCount"
-        border
-        fit
-        highlight-current-row
-        style="width: 100%"
-      >
+      <el-form ref="form" label-width="80px">
+        <el-form-item label="选择日期">
+          <div class="pickerStyle">
+            <el-date-picker v-model="month" format="MM 月" type="month" @change="monthchange" placeholder="选择月">
+            </el-date-picker>
+          </div>
+        </el-form-item>
+      </el-form>
+      <el-table :key="tableKey" v-loading="listLoading" :data="DayDsCount" border fit highlight-current-row style="width: 100%">
         <el-table-column label="日期" align="center" min-width="80">
           <template slot-scope="{ row }">
             <span>{{ row.count_date }}</span>
@@ -116,14 +90,7 @@
             <span>{{ row.unit_num }}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          v-for="(item, index) in rukounamelist"
-          :label="item"
-          :key="index"
-          rukou
-          :prop="item"
-          align="center"
-        ></el-table-column>
+        <el-table-column v-for="(item, index) in rukounamelist" :label="item" :key="index" rukou :prop="item" align="center"></el-table-column>
       </el-table>
     </el-card>
   </div>
@@ -136,9 +103,11 @@ import {
   getDayDsCount,
   getDayDsZxCount
 } from "@/api/count.js";
+import { parseTime } from '@/utils'
 export default {
   data() {
     return {
+      month: '',
       tableKey: "count",
       listLoading: false,
       iscreatedJC: true,
@@ -157,6 +126,7 @@ export default {
     countTo
   },
   mounted() {
+
     // this.getTodayDsCount();
     getTodayDsCount().then(res => {
       console.log(res);
@@ -178,20 +148,28 @@ export default {
       // this.createdrukou();
     });
     this.getDayDsZxCount();
-
-    // 今日数据统计、还差折线图没弄
-    getDayDsCount().then(res => {
-      this.DayDsCount = res.data.map(item => {
-        let obj = { ...item };
-        item.rukou.forEach(item => {
-          obj[item.rukou] = item.count;
-        });
-        return obj;
-      });
-      console.log(this.DayDsCount, 12123);
-    });
+    this.getDayDsCount()
   },
   methods: {
+    getDayDsCount(month = "") {
+      // 今日数据统计、还差折线图没弄
+      getDayDsCount({ month: month }).then(res => {
+        this.DayDsCount = res.data.map(item => {
+          let obj = { ...item };
+          item.rukou.forEach(item => {
+            obj[item.rukou] = item.count;
+          });
+          return obj;
+        });
+        console.log(this.DayDsCount, 12123);
+      });
+    },
+    // 获取月份
+    monthchange(e) {
+      let time = parseTime(e, "{m}")
+      console.log(time)
+      this.getDayDsCount(time)
+    },
     getTodayDsCount() {
       getTodayDsCount().then(res => {
         console.log(res);
@@ -351,161 +329,167 @@ export default {
 
 <style lang="scss">
 .dayStyle {
-  margin: 20px;
-  display: flex;
-  .left {
-    margin-right: 20px;
-    flex: 1;
-
-    .top {
-      display: flex;
-      .top_l {
-        width: 50%;
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        flex-wrap: wrap;
-        .Left {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          height: 100%;
-          .block_l {
-            background: #3a7bd7;
-            color: #fff;
-            width: 30%;
-            height: 100%;
-            line-height: 150px;
-            flex-shrink: 0;
-          }
-          .block_r {
-            width: 70%;
-            flex: 1;
-          }
-        }
-        .Right {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          flex-direction: column;
-          position: relative;
-          .tag {
-            position: absolute;
-            top: 0;
-            right: 0;
-            font-size: 16px;
-            padding: 5px 10px;
-            border: 1px solid #ccc;
-            border-radius: 0 10px 0 10px;
-          }
-        }
-        .block {
-          width: 48%;
-          box-shadow: 0 0 5px #ccc;
-          border-radius: 10px;
-          text-align: center;
-          height: 150px;
-          margin-top: 10px;
-          overflow: hidden;
-          font-size: 30px;
-          p {
-            font-size: 18px;
-          }
-        }
-      }
-      .top_r {
-        width: 50%;
+    margin: 20px;
+    display: flex;
+    .left {
+        margin-right: 20px;
         flex: 1;
-        .LB {
-          width: 100%;
-          height: 100%;
-        }
-        #createdJC {
-          height: 100%;
-        }
-      }
-    }
-    .content {
-      height: 300px;
-      box-sizing: border-box;
-      padding-top: 10px;
-      .button_zxt {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      .tuStyle {
-        width: 100%;
-        height: 260px;
-        position: relative;
-        #shankou {
-          position: absolute;
-          top: 0;
-          right: 0;
-          left: 0;
-          bottom: 0;
-          width: 100%;
-          height: 100%;
-          // width: 100%;
-          // height: 100%;
-          // width: 100%;
-          // min-width: 60vw;
-          height: 260px;
-        }
-        #createdZStyle {
-          position: absolute;
-          top: 0;
-          right: 0;
-          left: 0;
-          bottom: 0;
-          width: 100%;
-          height: 100%;
-          // width: 100%;
-          // min-width: 60vw;
-          // height: 260px;
-        }
-      }
-    }
-  }
-  .right {
-    width: 30%;
-    text-align: center;
-    h6 {
-      font-size: 20px;
-      line-height: 1;
-      margin: 0;
-      padding: 10px 0;
-    }
-    .right_c {
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      flex-wrap: wrap;
 
-      .block {
+        .top {
+            display: flex;
+            .top_l {
+                width: 50%;
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                flex-wrap: wrap;
+                .Left {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    height: 100%;
+                    .block_l {
+                        background: #3a7bd7;
+                        color: #fff;
+                        width: 30%;
+                        height: 100%;
+                        line-height: 150px;
+                        flex-shrink: 0;
+                    }
+                    .block_r {
+                        width: 70%;
+                        flex: 1;
+                    }
+                }
+                .Right {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+                    position: relative;
+                    .tag {
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                        font-size: 16px;
+                        padding: 5px 10px;
+                        border: 1px solid #ccc;
+                        border-radius: 0 10px 0 10px;
+                    }
+                }
+                .block {
+                    width: 48%;
+                    box-shadow: 0 0 5px #ccc;
+                    border-radius: 10px;
+                    text-align: center;
+                    height: 150px;
+                    margin-top: 10px;
+                    overflow: hidden;
+                    font-size: 30px;
+                    p {
+                        font-size: 18px;
+                    }
+                }
+            }
+            .top_r {
+                width: 50%;
+                flex: 1;
+                .LB {
+                    width: 100%;
+                    height: 100%;
+                }
+                #createdJC {
+                    height: 100%;
+                }
+            }
+        }
+        .content {
+            height: 300px;
+            box-sizing: border-box;
+            padding-top: 10px;
+            .button_zxt {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .tuStyle {
+                width: 100%;
+                height: 260px;
+                position: relative;
+                #shankou {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    left: 0;
+                    bottom: 0;
+                    width: 100%;
+                    height: 100%;
+                    // width: 100%;
+                    // height: 100%;
+                    // width: 100%;
+                    // min-width: 60vw;
+                    height: 260px;
+                }
+                #createdZStyle {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    left: 0;
+                    bottom: 0;
+                    width: 100%;
+                    height: 100%;
+                    // width: 100%;
+                    // min-width: 60vw;
+                    // height: 260px;
+                }
+            }
+        }
+    }
+    .right {
         width: 30%;
-        height: 100px;
-        margin-top: 10px;
-        margin-left: 10px;
         text-align: center;
-        padding: 0 10px;
-        box-shadow: 0 0 5px #ccc;
-        border-radius: 5px;
-        p {
-          font-size: 16px;
+        h6 {
+            font-size: 20px;
+            line-height: 1;
+            margin: 0;
+            padding: 10px 0;
+        }
+        .right_c {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-wrap: wrap;
 
-          display: -webkit-box;
-          -webkit-box-orient: vertical;
-          -webkit-line-clamp: 2;
-          overflow: hidden;
+            .block {
+                width: 30%;
+                height: 100px;
+                margin-top: 10px;
+                margin-left: 10px;
+                text-align: center;
+                padding: 0 10px;
+                box-shadow: 0 0 5px #ccc;
+                border-radius: 5px;
+                p {
+                    font-size: 16px;
+
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 2;
+                    overflow: hidden;
+                }
+                .count-to {
+                    font-weight: 600;
+                    font-size: 20px;
+                }
+            }
         }
-        .count-to {
-          font-weight: 600;
-          font-size: 20px;
-        }
-      }
     }
-  }
+}
+</style>
+<style >
+/*选择日期，年份的隐藏 */
+.el-date-picker__header {
+    display: none;
 }
 </style>

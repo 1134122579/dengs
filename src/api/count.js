@@ -1,29 +1,32 @@
 import request from "@/utils/request";
 
 // 获今日统计分析
-export function getTodayDsCount() {
-    return request({
-        url: "getTodayDsCount",
-        method: "get",
-    });
+export function getTodayDsCount(params) {
+  return request({
+    url: "getTodayDsCount",
+    method: "get",
+    params
+  });
 }
-export function getDayDsCount() {
-    return request({
-        url: "getDayDsCount",
-        method: "get",
-
-    });
+export function getDayDsCount(params) {
+  return request({
+    url: "getDayDsCount",
+    method: "get",
+    params
+  });
 }
-export function getYearDsCount() {
-    return request({
-        url: "getYearDsCount",
-        method: "get",
-    });
+export function getYearDsCount(params) {
+  return request({
+    url: "getYearDsCount",
+    method: "get",
+    params
+  });
 }
 // 折线统计图
-export function getDayDsZxCount() {
-    return request({
-        url: "getDayDsZxCount",
-        method: "get",
-    });
+export function getDayDsZxCount(params) {
+  return request({
+    url: "getDayDsZxCount",
+    method: "get",
+    params
+  });
 }
