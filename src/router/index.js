@@ -198,7 +198,7 @@ const createRouter = () =>
     scrollBehavior: () => ({
       y: 0
     }),
-    // base: "/xsyadmin", // 加上这一行 测试环境不要加
+    base: "/xsyadmin", // 加上这一行 测试环境不要加
     routes: constantRoutes
   });
 

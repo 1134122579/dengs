@@ -5,7 +5,7 @@
       <el-form
         :inline="true"
         :model="listQuery"
-        label-width="100px"
+        label-width="88px"
         class="demo-form-inline"
       >
         <el-form-item label="用户信息:">
@@ -13,6 +13,7 @@
             v-model="listQuery.userinfo"
             placeholder="请输入输入姓名、手机号"
             class="filter-item"
+            size="mini"
             clearable
             @keyup.enter.native="handleFilter"
           />
@@ -23,6 +24,7 @@
             clearable
             style="width: 250px"
             unlink-panels
+            size="mini"
             value-format="yyyy-MM-dd"
             type="daterange"
             class="filter-item"
@@ -43,7 +45,30 @@
             <el-radio-button label="2">未认证</el-radio-button>
           </el-radio-group>
         </el-form-item>
-
+        <el-form-item label="是否队长:">
+          <el-radio-group
+            v-model="listQuery.is_team_leader"
+            size="mini"
+            @change="selectStatus"
+          >
+            <!-- 用户状态 1 启用 2 冻结 3 注销 -->
+            <el-radio-button label="">全部</el-radio-button>
+            <el-radio-button label="1">是</el-radio-button>
+            <el-radio-button label="2">否</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="是否管理员:">
+          <el-radio-group
+            v-model="listQuery.is_admin"
+            size="mini"
+            @change="selectStatus"
+          >
+            <!-- 用户状态 1 启用 2 冻结 3 注销 -->
+            <el-radio-button label="">全部</el-radio-button>
+            <el-radio-button label="1">是</el-radio-button>
+            <el-radio-button label="2">否</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item>
           <el-button
             v-waves
@@ -188,6 +213,17 @@
             <el-radio-button :label="2">否</el-radio-button>
           </el-radio-group>
         </el-form-item>
+        <el-form-item label="绑定入口:">
+          <el-select v-model="form.rukou_id" placeholder="请选择">
+            <el-option
+              v-for="item in rukouList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -197,24 +233,24 @@
   </div>
 </template>
 <script>
-import { userList, setUser } from "@/api/user";
+import { userList, setUser, getDsRk } from "@/api/user";
 import waves from "@/directive/waves"; // waves directive
 import { parseTime } from "@/utils";
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 export default {
   name: "UserList",
   components: {
-    Pagination,
+    Pagination
   },
   directives: {
-    waves,
+    waves
   },
   filters: {
     // 状态过滤   <!-- 用户状态 1 启用 2 冻结 3 注销 -->
     authFilter(status) {
       const statusMap = {
         1: "已认证",
-        2: "未认证",
+        2: "未认证"
       };
       return statusMap[status];
     },
@@ -222,7 +258,7 @@ export default {
     adminFilter(status) {
       const statusMap = {
         1: "是",
-        2: "否",
+        2: "否"
       };
       return statusMap[status];
     },
@@ -230,16 +266,18 @@ export default {
     typeFilter(status) {
       const statusMap = {
         1: "success",
-        2: "warning",
+        2: "warning"
       };
       return statusMap[status];
-    },
+    }
   },
   data() {
     return {
       tableKey: 0,
       list: null,
-      form: {},
+      form: {
+        rukou_id: 1
+      },
       total: 0,
       status: "全部",
       listLoading: true,
@@ -253,20 +291,30 @@ export default {
         page: 1,
         pageSize: 10,
         is_auth: "",
+        is_team_leader: "",
+        is_admin: "",
         userinfo: "",
-        querydate: "",
+        querydate: ""
       },
       // 图片查看器变量
       showViewer: false,
       showReviewer: false,
       selectLoading: false,
       dialogFormVisible: false,
+      rukouList: []
     };
   },
   created() {
     this.getList();
+    this.getDsRk();
   },
   methods: {
+    getDsRk() {
+      getDsRk().then(res => {
+        console.log(res);
+        this.rukouList = res.data;
+      });
+    },
     // 清空
     handleNull() {
       (this.listQuery = {
@@ -274,25 +322,25 @@ export default {
         pageSize: 10,
         userinfo: "",
         status: "",
-        querydate: "",
+        querydate: ""
       }),
         this.getList();
     },
     radioButtton(value, text) {
       this.getList();
     },
-    onPreview: function () {
+    onPreview: function() {
       this.showViewer = true;
     },
     // 提交信息
     submitData() {
-      setUser(this.form).then((response) => {
+      setUser(this.form).then(response => {
         this.dialogFormVisible = false;
         this.$notify({
           title: "Success",
           message: "添加成功",
           type: "success",
-          duration: 2000,
+          duration: 2000
         });
         this.getList();
         return;
@@ -302,7 +350,7 @@ export default {
     // 获取列表
     getList() {
       this.listLoading = true;
-      userList(this.listQuery).then((response) => {
+      userList(this.listQuery).then(response => {
         this.listLoading = false;
         this.list = response.data.result;
         this.total = response.data.pageInfo.total;
@@ -314,14 +362,15 @@ export default {
     },
     // 修改用户信息
     handleModify(row) {
+      console.log(row);
       this.form = JSON.parse(JSON.stringify(row));
       this.dialogFormVisible = true;
     },
     // 筛选认证状态
     selectStatus(status) {
       this.getList();
-    },
-  },
+    }
+  }
 };
 </script>
 <style scoped>
