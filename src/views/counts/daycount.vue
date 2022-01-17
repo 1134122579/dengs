@@ -50,7 +50,7 @@
         </div>
       </el-card>
       <el-card class="right">
-        <h6>防火协议签定统计</h6>
+        <h6>登山备案人数统计</h6>
         <div class="right_c">
           <div class="block" v-for="(item, index) in rukoullist" :key="index">
             <p>{{ item.rukou }}</p>
@@ -106,6 +106,7 @@ import {
   getTodayDsCount,
   getDayDsCount,
   getDayDsZxCount,
+  getTodayCount,
 } from "@/api/count.js";
 import { parseTime } from '@/utils';
 import FileSaver from "file-saver";
@@ -132,7 +133,7 @@ export default {
     countTo,
   },
   mounted() {
-
+    this.getTodayCount()
     // this.getTodayDsCount();
     getTodayDsCount().then((res) => {
       console.log(res);
@@ -146,7 +147,7 @@ export default {
         rukoucountlist.push(item.count);
       });
       console.log(rukounamelist);
-      this.rukoullist = rukoullist;
+      // this.rukoullist = rukoullist;
       this.rukounamelist = rukounamelist;
       this.rukoucountlist = rukoucountlist;
       this.renshuobj = renshuobj;
@@ -157,6 +158,13 @@ export default {
     this.getDayDsCount()
   },
   methods: {
+    // 获取数据
+    getTodayCount() {
+      getTodayCount().then(res => {
+        console.log(res)
+        this.rukoullist = res.data.rukou;
+      })
+    },
     down(t) {
       var xlsxParam = { raw: true }; // 导出的内容只做解析，不进行格式转换
       var wb = XLSX.utils.table_to_book(
@@ -208,6 +216,7 @@ export default {
       console.log(time)
       this.getDayDsCount(time)
     },
+
     getTodayDsCount() {
       getTodayDsCount().then((res) => {
         console.log(res);
@@ -221,7 +230,7 @@ export default {
           rukoucountlist.push(item.count);
         });
         console.log(rukounamelist);
-        this.rukoullist = rukoullist;
+        // this.rukoullist = rukoullist;
         this.rukounamelist = rukounamelist;
         this.rukoucountlist = rukoucountlist;
         this.renshuobj = renshuobj;

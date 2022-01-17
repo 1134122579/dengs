@@ -30,3 +30,11 @@ export function getDayDsZxCount(params) {
     params
   });
 }
+// 折线统计图
+export function getTodayCount(params) {
+  return request({
+    url: "getTodayDsCount2",
+    method: "get",
+    params
+  });
+}
