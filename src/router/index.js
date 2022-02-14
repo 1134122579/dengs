@@ -45,20 +45,20 @@ export const constantRoutes = [
     children: [
       {
         path: "/redirect/:path(.*)",
-        component: () => import("@/views/redirect/index"),
-      },
-    ],
+        component: () => import("@/views/redirect/index")
+      }
+    ]
   },
 
   {
     path: "/login",
     component: () => import("@/views/login/index"),
-    hidden: true,
+    hidden: true
   },
   {
     path: "/auth-redirect",
     component: () => import("@/views/login/auth-redirect"),
-    hidden: true,
+    hidden: true
   },
   {
     path: "/",
@@ -72,10 +72,10 @@ export const constantRoutes = [
         meta: {
           title: "今日统计",
           icon: "dashboard",
-          affix: true,
-        },
-      },
-    ],
+          affix: true
+        }
+      }
+    ]
   },
   {
     path: "/count",
@@ -84,7 +84,7 @@ export const constantRoutes = [
     name: "userdata",
     meta: {
       title: "数据统计",
-      icon: "el-icon-s-data",
+      icon: "el-icon-s-data"
     },
     children: [
       {
@@ -93,9 +93,9 @@ export const constantRoutes = [
         name: "yearscount",
         meta: {
           title: "年度数据",
-          icon: "el-icon-s-data",
-        },
-      },
+          icon: "el-icon-s-data"
+        }
+      }
       // {
       //     path: "daycount",
       //     component: () =>
@@ -106,7 +106,7 @@ export const constantRoutes = [
       //         icon: "el-icon-pie-chart"
       //     }
       // }
-    ],
+    ]
   },
   {
     path: "/user",
@@ -115,7 +115,7 @@ export const constantRoutes = [
     name: "user",
     meta: {
       title: "登山管理",
-      icon: "set",
+      icon: "set"
     },
     children: [
       {
@@ -125,8 +125,8 @@ export const constantRoutes = [
         meta: {
           title: "登山用户",
           icon: "user",
-          affix: true,
-        },
+          affix: true
+        }
       },
       {
         path: "beianlist",
@@ -135,10 +135,10 @@ export const constantRoutes = [
         meta: {
           title: "登山备案",
           icon: "list",
-          affix: true,
-        },
-      },
-    ],
+          affix: true
+        }
+      }
+    ]
   },
 
   {
@@ -148,7 +148,7 @@ export const constantRoutes = [
     name: "set",
     meta: {
       title: "系统设置",
-      icon: "set",
+      icon: "set"
     },
     children: [
       // {
@@ -167,16 +167,16 @@ export const constantRoutes = [
         name: "Edit",
         meta: {
           title: "修改密码",
-          icon: "edit",
-        },
-      },
-    ],
+          icon: "edit"
+        }
+      }
+    ]
   },
   {
     path: "*",
     redirect: "/",
-    hidden: true,
-  },
+    hidden: true
+  }
 ];
 /**
  * asyncRoutes
@@ -196,10 +196,10 @@ const createRouter = () =>
     // require service support
     mode: "history",
     scrollBehavior: () => ({
-      y: 0,
+      y: 0
     }),
-    // base: "/xsyadmin", // 加上这一行 测试环境不要加
-    routes: constantRoutes,
+    base: "/xsyadmin", // 加上这一行 测试环境不要加
+    routes: constantRoutes
   });
 
 const router = createRouter();
