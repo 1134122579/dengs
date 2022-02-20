@@ -4,7 +4,7 @@
       <el-card class="left">
         <div class="top">
           <div class="top_l">
-            <div class="block Left dag">
+            <div class="block Left ">
               <div class="block_l">今日</div>
               <div class="block_r">
                 <p>登山人数</p>
@@ -67,7 +67,7 @@
           </div>
           <div class="top_r">
             <h5 style="text-align: center; margin: 0; font-size: 20px">
-              今日登山人数
+              今日登山数据柱状图
             </h5>
             <div ref="createdJC" id="createdJC"></div>
           </div>
@@ -75,7 +75,7 @@
         <div class="content">
           <div class="button_zxt">
             <el-button type="primary" @click="onLookZX">{{
-              iscreatedJC ? "今日的登山人数时段分析图" : "今日入口数据柱状图"
+              iscreatedJC ? "今日登山人数时段分布图" : "今日入口数据柱状图"
             }}</el-button>
           </div>
           <div class="tuStyle" v-if="iscreatedJC">
@@ -187,7 +187,7 @@ import {
   getTodayDsCount,
   getDayDsCount,
   getDayDsZxCount,
-  getTodayCount,
+  getTodayCount
 } from "@/api/count.js";
 import { parseTime } from "@/utils";
 import FileSaver from "file-saver";
@@ -203,11 +203,11 @@ export default {
       daycount: 3000,
       renshuobj: {
         today: {
-          allDsCount: 0,
+          allDsCount: 0
         },
         yesterday: {
-          allDsCount: 0,
-        },
+          allDsCount: 0
+        }
       },
       DayDsCount: [],
       rukoullist: [],
@@ -218,11 +218,11 @@ export default {
       chartDom: null,
       mycreatedJChart: null,
       myshankouChart: null,
-      shankou: null,
+      shankou: null
     };
   },
   components: {
-    countTo,
+    countTo
   },
   created() {},
   mounted() {
@@ -252,7 +252,7 @@ export default {
         bookType: "xlsx",
         bookSST: true,
         type: "array",
-        autoWidth: true, //非必填
+        autoWidth: true //非必填
       });
       // var date = this.getTime();
       var date = "当月数据";
@@ -274,11 +274,11 @@ export default {
     },
     getDayDsCount(month = "") {
       // 今日数据统计、还差折线图没弄
-      getDayDsCount({ month: month }).then((res) => {
-        this.DayDsCount = res.data.map((item) => {
+      getDayDsCount({ month: month }).then(res => {
+        this.DayDsCount = res.data.map(item => {
           let obj = { ...item };
           obj["zong"] = item.team_num + item.unit_num;
-          item.rukou.forEach((item) => {
+          item.rukou.forEach(item => {
             obj[item.rukou] = item.count;
           });
           return obj;
@@ -298,7 +298,7 @@ export default {
       let rukoullist = res.data.rukou;
       let rukounamelist = [];
       let rukoucountlist = [];
-      rukoullist.forEach((item) => {
+      rukoullist.forEach(item => {
         rukounamelist.push(item.rukou);
         rukoucountlist.push(item.count);
       });
@@ -311,7 +311,7 @@ export default {
       let res = await getDayDsZxCount();
       let time = [];
       let numList = [];
-      res.data.forEach((item) => {
+      res.data.forEach(item => {
         time.push(`${item.hour}时`);
         numList.push(item.num);
       });
@@ -343,28 +343,28 @@ export default {
           axisLabel: {
             rotate: 0,
             color: "#42b983",
-            formatter: function (val) {
+            formatter: function(val) {
               if (val.length > 3) {
                 return `${val.slice(0, 5)}...`;
               }
               return val;
-            },
-          },
+            }
+          }
         },
         yAxis: {
-          type: "value",
+          type: "value"
         },
         series: [
           {
             label: {
-              show: true,
+              show: true
             },
             smooth: true,
             data: this.numList,
             type: "line",
-            color: "#3A7BD7",
-          },
-        ],
+            color: "#3A7BD7"
+          }
+        ]
       };
 
       option && this.myshankouChart.setOption(option);
@@ -376,27 +376,27 @@ export default {
           type: "category",
           data: ["登山人数", "团体", "个人"],
           axisTick: {
-            alignWithLabel: true,
-          },
+            alignWithLabel: true
+          }
         },
         yAxis: {
-          type: "value",
+          type: "value"
         },
         series: [
           {
             label: {
-              show: true,
+              show: true
             },
             barMaxWidth: 60,
             data: [
               this.renshuobj.today.allDsCount,
               this.renshuobj.today.teamCount,
-              this.renshuobj.today.unitCount,
+              this.renshuobj.today.unitCount
             ],
             type: "bar",
-            color: "#3A7BD7",
-          },
-        ],
+            color: "#3A7BD7"
+          }
+        ]
       };
       option && this.mycreatedJChart.setOption(option);
     },
@@ -414,37 +414,37 @@ export default {
           axisLabel: {
             rotate: 25,
             color: "#42b983",
-            formatter: function (val) {
+            formatter: function(val) {
               if (val.length > 3) {
                 return `${val.slice(0, 5)}...`;
               }
               return val;
-            },
+            }
           },
           axisTick: {
-            alignWithLabel: true,
-          },
+            alignWithLabel: true
+          }
         },
         yAxis: {
-          type: "value",
+          type: "value"
         },
         series: [
           {
             label: {
-              show: true,
+              show: true
             },
             barMaxWidth: 50,
             barMinHeight: 10,
             data: this.rukoucountlist,
             type: "bar",
-            color: "#3A7BD7",
-          },
-        ],
+            color: "#3A7BD7"
+          }
+        ]
       };
 
       option && this.myshankouChart.setOption(option);
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -461,10 +461,6 @@ export default {
       .top_l {
         width: 50%;
         padding: 0 20px;
-        // display: flex;
-        // justify-content: space-around;
-        // align-items: center;
-        // flex-wrap: wrap;
         .topFlex {
           display: flex;
           justify-content: space-around;
@@ -511,26 +507,33 @@ export default {
           border-radius: 10px;
           text-align: center;
           height: 150px;
-          margin-top: 10px;
           overflow: hidden;
           font-size: 30px;
           p {
             font-size: 18px;
           }
         }
-        // .dag {
-        //   width: 43%;
-        // }
+        .dag {
+          margin-top: 10px;
+        }
       }
       .top_r {
         width: 50%;
         flex: 1;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         .LB {
           width: 100%;
-          height: 100%;
+          // height: 100%;
+          flex: 1;
         }
         #createdJC {
-          height: 100%;
+          flex: 1;
+          width: 100%;
+          // height: 100%;
         }
       }
     }
