@@ -61,12 +61,12 @@
       <el-button
         :loading="loading"
         type="primary"
-        style="width:100%;margin-bottom:30px;"
+        style="width: 100%; margin-bottom: 30px"
         @click.native.prevent="handleLogin"
         >立即登录</el-button
       >
 
-      <div style="position:relative">
+      <div style="position: relative">
         <div class="tips">
           <!-- <span>Username : admin</span>
           <span>Password : any</span> -->
@@ -82,7 +82,13 @@
       </div>
     </el-form>
     <p
-      style="position: fixed;bottom: 0;width:100%;text-align:center;color:#FFF;"
+      style="
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+        color: #fff;
+      "
     >
       Copyright © 2021-2022 应安科技 版权所有
     </p>
@@ -96,7 +102,7 @@ import SocialSign from "./components/SocialSignin";
 export default {
   name: "Login",
   components: {
-    SocialSign
+    SocialSign,
   },
   data() {
     const validateUsername = (rule, value, callback) => {
@@ -116,43 +122,43 @@ export default {
     return {
       loginForm: {
         username: "",
-        password: ""
+        password: "",
       },
       loginRules: {
         username: [
           {
             required: true,
             trigger: "blur",
-            validator: validateUsername
-          }
+            validator: validateUsername,
+          },
         ],
         password: [
           {
             required: true,
             trigger: "blur",
-            validator: validatePassword
-          }
-        ]
+            validator: validatePassword,
+          },
+        ],
       },
       passwordType: "password",
       capsTooltip: false,
       loading: false,
       showDialog: false,
       redirect: undefined,
-      otherQuery: {}
+      otherQuery: {},
     };
   },
   watch: {
     $route: {
-      handler: function(route) {
+      handler: function (route) {
         const query = route.query;
         if (query) {
           this.redirect = query.redirect;
           this.otherQuery = this.getOtherQuery(query);
         }
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   created() {
     // window.addEventListener('storage', this.afterQRScan)
@@ -183,7 +189,7 @@ export default {
       });
     },
     handleLogin() {
-      this.$refs.loginForm.validate(valid => {
+      this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.loading = true;
           this.$store
@@ -191,7 +197,7 @@ export default {
             .then(() => {
               this.$router.push({
                 path: this.redirect || "/",
-                query: this.otherQuery
+                query: this.otherQuery,
               });
               this.loading = false;
             })
@@ -211,7 +217,7 @@ export default {
         }
         return acc;
       }, {});
-    }
+    },
     // afterQRScan() {
     //   if (e.key === 'x-admin-oauth-code') {
     //     const code = getQueryObject(e.newValue)
@@ -230,7 +236,7 @@ export default {
     //     }
     //   }
     // }
-  }
+  },
 };
 </script>
 
@@ -285,15 +291,23 @@ $light_gray: #f5f7fa;
   min-height: 100%;
   width: 100%;
   background-color: $bg;
-  background: url("https://api.zlwdyszx.top/bg.jpg");
+  background: url("https://api.uba9.com/img/dengshan.png");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-position: center;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   .login-form {
     position: relative;
     width: 520px;
     max-width: 100%;
-    padding: 160px 35px 0;
+    padding: 80px 35px;
     margin: 0 auto;
+    border-radius: 10px;
     overflow: hidden;
+    background: rgba(0, 0, 0, 0.6);
   }
   .tips {
     font-size: 14px;

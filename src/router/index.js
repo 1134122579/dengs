@@ -142,6 +142,27 @@ export const constantRoutes = [
   },
 
   {
+    path: "/notice",
+    component: Layout,
+    redirect: "/notice",
+    name: "set",
+    meta: {
+      title: "登山公告",
+      icon: "set",
+    },
+    children: [
+      {
+        path: "noticepage",
+        component: () => import("@/views/notice/index"),
+        name: "noticepage",
+        meta: {
+          title: "登山公告",
+          icon: "edit",
+        },
+      },
+    ],
+  },
+  {
     path: "/seting",
     component: Layout,
     redirect: "/seting",
@@ -151,16 +172,6 @@ export const constantRoutes = [
       icon: "set",
     },
     children: [
-      // {
-      //       path: "create",
-      //       component: () =>
-      //           import ("@/views/sysseting/add"),
-      //       name: "createUser",
-      //       meta: {
-      //           title: "添加管理员",
-      //           icon: "add"
-      //       }
-      //   },
       {
         path: "edit",
         component: () => import("@/views/sysseting/edit"),

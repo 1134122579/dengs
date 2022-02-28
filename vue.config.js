@@ -25,7 +25,7 @@ module.exports = {
    * Detail: https://cli.vuejs.org/config/#publicpath
    */
   publicPath: "/xsyadmin",
-  // publicPath: "/",
+  // publicPath: "/", 
   outputDir: "dist",
   assetsDir: "static",
   lintOnSave: false,
